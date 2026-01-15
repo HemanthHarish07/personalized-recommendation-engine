@@ -34,15 +34,16 @@ def hit_rate_at_k(model, train_interactions, test_interactions, k=10):
 
     model.fit()
 
-    test_by_user = {}
-    for row in test_interactions:
-        test_by_user.setdefault(row["userId"], []).append(row["movieId"])
+    # Group test interactions by user
+    test_by_user = (
+        test_interactions.groupby("userId")["movieId"].apply(list).to_dict()
+    )
 
     for user_id, true_items in test_by_user.items():
         try:
             recommendations = model.recommend(user_id, top_n=k)
         except TypeError:
-            # Popularity model does not use user_id
+            # Popularity model does not require user_id
             recommendations = model.recommend(top_n=k)
 
         if any(item in recommendations for item in true_items):
@@ -50,3 +51,4 @@ def hit_rate_at_k(model, train_interactions, test_interactions, k=10):
         users += 1
 
     return hits / users if users > 0 else 0.0
+
