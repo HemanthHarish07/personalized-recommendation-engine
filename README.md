@@ -1,2 +1,3 @@
-# personalized-recommendation-engine
-A reproducible recommendation engine using collaborative filtering with cold-start analysis.
+# Personalized Recommendation Engine
+
+A reproducible recommendation system built using collaborative filtering techniques.
